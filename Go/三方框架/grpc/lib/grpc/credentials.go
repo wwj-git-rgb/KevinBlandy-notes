@@ -14,6 +14,8 @@ type
 	# type AuthInfo interface {
 			AuthType() string
 		}
+
+		* 认证类型
 	
 	# type AuthorityValidator interface {
 			ValidateAuthority(authority string) error
@@ -71,7 +73,7 @@ type
 		}
 
 		func RequestInfoFromContext(ctx context.Context) (ri RequestInfo, ok bool)
-			* 从上下文获取懂啊请求信息
+			* 从上下文获取请求信息
 	
 	# type SecurityLevel int
 		const (

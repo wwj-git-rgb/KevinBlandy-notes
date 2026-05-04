@@ -9,12 +9,13 @@ protobuf-go
 
 		protoc \
 			--proto_path=proto \
+			--go_opt=Mapi/member_api.proto=test/gen/api \
+			--go_opt=Mmodel/message.proto=test/gen/model \
 			--go_out=gen \
-			--go_opt=paths=import \
+			--go_opt=paths=source_relative \
 			--go-grpc_out=gen \
-			--go-grpc_opt=paths=import \
+			--go-grpc_opt=paths=source_relative \
 			proto/**/*.proto
-
 		
 	# 要生成 Go 代码，必须要在 proto 中提供 Go 包的导入路径，有两个方式
 

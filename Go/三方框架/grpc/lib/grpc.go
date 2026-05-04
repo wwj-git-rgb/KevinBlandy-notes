@@ -70,6 +70,8 @@ type
 		func ForceCodec(codec encoding.Codec) CallOption
 		func ForceCodecV2(codec encoding.CodecV2) CallOption
 		func Header(md *metadata.MD) CallOption
+			* 用于解析服务端响应的 Header
+
 		func MaxCallRecvMsgSize(bytes int) CallOption
 		func MaxCallSendMsgSize(bytes int) CallOption
 		func MaxRetryRPCBufferSize(bytes int) CallOption
@@ -80,11 +82,16 @@ type
 
 		func StaticMethod() CallOption
 		func Trailer(md *metadata.MD) CallOption
+			* 用于解析服务端响应的 Trailer
+
 		func UseCompressor(name string) CallOption
 			* 压缩请求
 				grpc.UseCompressor(gzip.Name)
 
 		func WaitForReady(waitForReady bool) CallOption
+			* 用于配置客户端处于 TRANSIENT_FAILURE 状态时的 RPC 行为，该状态会在所有地址均无法连接时触发。
+			* 如果 waitForReady 为 false，RPC 将立即失败。否则，客户端将等待直至建立连接或达到 RPC 的超时期限。
+			* 默认情况下，RPC 不会 “等待就绪”。
 
 	# type ClientConn struct {
 			// contains filtered or unexported fields
@@ -114,6 +121,8 @@ type
 	# type ClientStream interface {
 			Header() (metadata.MD, error)
 			Trailer() metadata.MD
+				* 读取 Header 和 Trailer
+
 			CloseSend() error
 			Context() context.Context
 			SendMsg(m any) error
@@ -197,7 +206,13 @@ type
 		func WithCredentialsBundle(b credentials.Bundle) DialOption
 		func WithDecompressor(dc Decompressor) DialOption
 		func WithDefaultCallOptions(cos ...CallOption) DialOption
+			* 设置全局默认的调用配置
+
 		func WithDefaultServiceConfig(s string) DialOption
+			* 设置默认的服务配置
+			* 详细说明
+				https://github.com/grpc/grpc/blob/master/doc/service_config.md
+
 		func WithDialer(f func(string, time.Duration) (net.Conn, error)) DialOption
 		func WithDisableHealthCheck() DialOption
 		func WithDisableRetry() DialOption
@@ -207,6 +222,13 @@ type
 		func WithInitialWindowSize(s int32) DialOption
 		func WithInsecure() DialOption
 		func WithKeepaliveParams(kp keepalive.ClientParameters) DialOption
+			* 链路保活设置
+				keepalive.ClientParameters{
+					Time:                10 * time.Second, // 10 秒没活动就发送 Ping
+					Timeout:             time.Second,      // 如果超过 1s 没得到服务器的应答，则视为连接断开
+					PermitWithoutStream: true,             // 即使没有活跃的流，也会发送ping请求
+				}
+
 		func WithLocalDNSResolution() DialOption
 		func WithMaxCallAttempts(n int) DialOption
 		func WithMaxHeaderListSize(s uint32) DialOption
@@ -223,6 +245,7 @@ type
 		func WithReturnConnectionError() DialOption
 		func WithSharedWriteBuffer(val bool) DialOption
 		func WithStatsHandler(h stats.Handler) DialOption
+				
 		func WithStreamInterceptor(f StreamClientInterceptor) DialOption
 		func WithTimeout(d time.Duration) DialOption
 		func WithTransportCredentials(creds credentials.TransportCredentials) DialOption
@@ -375,8 +398,11 @@ type
 		func InTapHandle(h tap.ServerInHandle) ServerOption
 		func InitialConnWindowSize(s int32) ServerOption
 		func InitialWindowSize(s int32) ServerOption
+
 		func KeepaliveEnforcementPolicy(kep keepalive.EnforcementPolicy) ServerOption
 		func KeepaliveParams(kp keepalive.ServerParameters) ServerOption
+				* 服务器超时相关的配置
+
 		func MaxConcurrentStreams(n uint32) ServerOption
 		func MaxHeaderListSize(s uint32) ServerOption
 		func MaxMsgSize(m int) ServerOption
@@ -397,6 +423,7 @@ type
 	# type ServerStream interface {
 			SetHeader(metadata.MD) error
 			SendHeader(metadata.MD) error
+
 			SetTrailer(metadata.MD)
 			Context() context.Context
 			SendMsg(m any) error
@@ -480,6 +507,7 @@ type
 	# type TrailerCallOption struct {
 			TrailerAddr *metadata.MD
 		}
+
 	# type UnaryClientInterceptor func(ctx context.Context, method string, req, reply any, cc *ClientConn, invoker UnaryInvoker, opts ...CallOption) error
 		* 一元客户端拦截器
 		* 服务继续往下执行

@@ -52,16 +52,20 @@ type
 			ClientStream
 		}
 
+		* 双向流，客户端句柄
+
 	# type BidiStreamingServer[Req any, Res any] interface {
 			Recv() (*Req, error)
 			Send(*Res) error
 			ServerStream
 		}
 
+		* 双向流，服务端句柄。
+
 	# type CallOption interface {
 		}
 
-		* 请求级别的配置
+		* 客户端请求级别的配置
 
 		func CallAuthority(authority string) CallOption
 		func CallContentSubtype(contentSubtype string) CallOption
@@ -97,6 +101,8 @@ type
 			// contains filtered or unexported fields
 		}
 
+		* 客户端连接对象
+
 		func Dial(target string, opts ...DialOption) (*ClientConn, error)
 		func DialContext(ctx context.Context, target string, opts ...DialOption) (conn *ClientConn, err error)
 		func NewClient(target string, opts ...DialOption) (conn *ClientConn, err error)
@@ -120,8 +126,11 @@ type
 
 	# type ClientStream interface {
 			Header() (metadata.MD, error)
+				* 阻塞，直到收到 Header
+
 			Trailer() metadata.MD
-				* 读取 Header 和 Trailer
+				* 读取 Trailer，必须在 Recv 循环结束之后调用，才会正确收到数据。
+				* 有时候速度过快，客户端已经缓存了所有消息和 Trailer，就会出现在 Recv 之前读取到 Trailer 消息。
 
 			CloseSend() error
 			Context() context.Context
@@ -129,14 +138,22 @@ type
 			RecvMsg(m any) error
 		}
 
+		* 客户端流接口
+
 		func NewClientStream(ctx context.Context, desc *StreamDesc, cc *ClientConn, method string, ...) (ClientStream, error)
 	
 
 	# type ClientStreamingClient[Req any, Res any] interface {
 			Send(*Req) error
+				* 发送消息
+
 			CloseAndRecv() (*Res, error)
+				* 调用 CloseSend 方法，停止发送，再调用 RecvMsg 方法接收响应
+
 			ClientStream
 		}
+
+		* 客户端单向流，客户端句柄。
 
 	
 	# type ClientStreamingServer[Req any, Res any] interface {
@@ -144,6 +161,8 @@ type
 			SendAndClose(*Res) error
 			ServerStream
 		}
+
+		* 客户端单向流，服务端句柄。
 
 	# type Codec interface {  // 过期
 			Marshal(v any) ([]byte, error)
@@ -189,7 +208,7 @@ type
 	# type DialOption interface {
 		}
 
-		// 请求配置
+		* 创建连接的配置
 
 		func FailOnNonTempDialError(f bool) DialOption
 		func WithAuthority(a string) DialOption
@@ -286,6 +305,8 @@ type
 			ClientStream
 		}
 
+		* 客户端流接口的范型实现
+
 		func (x *GenericClientStream[Req, Res]) CloseAndRecv() (*Res, error)
 		func (x *GenericClientStream[Req, Res]) Recv() (*Res, error)
 		func (x *GenericClientStream[Req, Res]) Send(m *Req) error
@@ -293,6 +314,8 @@ type
 	# type GenericServerStream[Req any, Res any] struct {
 			ServerStream
 		}
+
+		* 服务端流接口的范型实现
 
 		func (x *GenericServerStream[Req, Res]) Recv() (*Req, error)
 		func (x *GenericServerStream[Req, Res]) Send(m *Res) error
@@ -422,23 +445,34 @@ type
 	
 	# type ServerStream interface {
 			SetHeader(metadata.MD) error
+				* 设置 Header，可以多次调用，会合并相同的 Key
+
 			SendHeader(metadata.MD) error
+				* 发送 Header，只能调用一次
 
 			SetTrailer(metadata.MD)
+				* 设置 Trailer，可以多次调用，会合并相同的 Key
+
 			Context() context.Context
 			SendMsg(m any) error
 			RecvMsg(m any) error
 		}
+
+		* 服务端流接口
 
 	# type ServerStreamingClient[Res any] interface {
 			Recv() (*Res, error)
 			ClientStream
 		}
 
+		* 服务端单向流，客户端句柄
+
 	# type ServerStreamingServer[Res any] interface {
 			Send(*Res) error
 			ServerStream
 		}
+
+		* 服务端单向流，客户端句柄。
 
 	# type ServerTransportStream interface {
 			Method() string
@@ -447,7 +481,11 @@ type
 			SetTrailer(md metadata.MD) error
 		}
 
+		* 服务端流抽象
+
 		func ServerTransportStreamFromContext(ctx context.Context) ServerTransportStream
+			* 从上下文中获取到 ServerTransportStream，如果不存在返回 nil
+			* Ctx Key 是 streamKey{}
 
 	# type ServiceConfig struct {
 			serviceconfig.Config
@@ -480,6 +518,8 @@ type
 			SendMsg(m any) error
 			RecvMsg(m any) error
 		}
+
+		* 流接口抽象
 
 	# type StreamClientInterceptor func(ctx context.Context, desc *StreamDesc, cc *ClientConn, method string, streamer Streamer, opts ...CallOption) (ClientStream, error)
 		* 流式客户端拦截器
@@ -536,6 +576,12 @@ func
 	func MethodFromServerStream(stream ServerStream) (string, bool)
 	func NewContextWithServerTransportStream(ctx context.Context, stream ServerTransportStream) context.Context
 	func SendHeader(ctx context.Context, md metadata.MD) error
+		* 发送 Header，本质上是 调用 ServerTransportStreamFromContext 获取到 ServerTransportStream 进行发送
+		* 如果 ctx 中不存在 ServerTransportStream，则返回错误
+
 	func SetHeader(ctx context.Context, md metadata.MD) error
+		* 设置 Header，，类似于 SetHeader
+
 	func SetSendCompressor(ctx context.Context, name string) error
 	func SetTrailer(ctx context.Context, md metadata.MD) error
+		* 设置 Trailer，类似于 SetHeader

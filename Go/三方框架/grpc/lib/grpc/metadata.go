@@ -45,6 +45,8 @@ func
 -------------------------
 
 	func AppendToOutgoingContext(ctx context.Context, kv ...string) context.Context
+		* 添加新的KV到 Out 上下文
+
 	func DecodeKeyValue(k, v string) (string, string, error)
 
 	func NewIncomingContext(ctx context.Context, md MD) context.Context

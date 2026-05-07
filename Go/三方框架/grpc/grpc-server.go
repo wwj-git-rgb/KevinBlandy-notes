@@ -1,6 +1,20 @@
 ---------------------------
 Server
 ---------------------------
+	# 借口体系
+		ServerTransportStream
+			Method() string
+			SetHeader(md metadata.MD) error
+			SendHeader(md metadata.MD) error
+			SetTrailer(md metadata.MD) error
+
+		ServerStream
+			SetHeader(metadata.MD) error
+			SendHeader(metadata.MD) error
+			SetTrailer(metadata.MD)
+			Context() context.Context
+			SendMsg(m any) error
+			RecvMsg(m any) error
 
 
 ---------------------------

@@ -19,7 +19,9 @@ UnaryClientInterceptor
 --------------------------------------
 	# 一元调用，客户端拦截器
 		* 在连接级别添加，拦截发出去的请求，在请求发出前/后进行执行。
-		* grpc.WithChainUnaryInterceptor 可以添加多个，依次执行
+		* grpc.WithUnaryInterceptor 添加单个拦截器，多次调用会覆盖前面的
+		* grpc.WithChainUnaryInterceptor 可以添加多个，依次执行，也可以多次调用，深度优先。
+		* 单个拦截器和拦截器链可以并存，最先添加的最先执行。简单理解为
 
 		type UnaryClientInterceptor func(ctx context.Context, method string, req, reply any, cc *ClientConn, invoker UnaryInvoker, opts ...CallOption) error
 			ctx
@@ -68,7 +70,9 @@ UnaryServerInterceptor
 	# 一元调用，服务端拦截器
 
 		* 主要作用是在服务端进行拦截，在 Handler/Interceptor 执行之前/后执行。
-		* grpc.ChainUnaryInterceptor 可以添加多个，按照添加顺序依次执行，可以对
+		* grpc.UnaryInterceptor 添加单个拦截器，多次调用会 panic：panic: The unary server interceptor was already set and may not be reset.
+		* grpc.ChainUnaryInterceptor 可以添加多个，按照添加顺序依次执行，可以多次调用。深度优先。
+		* 单个拦截器和拦截器链可以并存，但是注意，在服务端单个拦截器固定会比拦截器链先执行。
 
 		type UnaryServerInterceptor func(ctx context.Context, req any, info *UnaryServerInfo, handler UnaryHandler) (resp any, err error)
 

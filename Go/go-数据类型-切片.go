@@ -143,7 +143,7 @@
 		
 		fmt.Println(p2 == p1)	// false
 	
-	# 切换转换为指针
+	# 切片转换为数组指针
 		* Go 1.20 的功能
 
 		var slice = []int{1, 2, 3}

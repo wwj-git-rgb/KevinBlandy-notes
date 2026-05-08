@@ -91,6 +91,9 @@ type
 		func UseCompressor(name string) CallOption
 			* 压缩请求
 				grpc.UseCompressor(gzip.Name)
+			
+			* 注意，服务端需要导入对应的包才能实现自动解码
+				_ "google.golang.org/grpc/encoding/gzip"
 
 		func WaitForReady(waitForReady bool) CallOption
 			* 用于配置客户端处于 TRANSIENT_FAILURE 状态时的 RPC 行为，该状态会在所有地址均无法连接时触发。
@@ -217,6 +220,8 @@ type
 		func WithBlock() DialOption
 		func WithChainStreamInterceptor(interceptors ...StreamClientInterceptor) DialOption
 		func WithChainUnaryInterceptor(interceptors ...UnaryClientInterceptor) DialOption
+			* 添加多个链式一元拦截器
+
 		func WithChannelzParentID(c channelz.Identifier) DialOption
 		func WithCodec(c Codec) DialOption
 		func WithCompressor(cp Compressor) DialOption
@@ -266,6 +271,7 @@ type
 		func WithStatsHandler(h stats.Handler) DialOption
 				
 		func WithStreamInterceptor(f StreamClientInterceptor) DialOption
+
 		func WithTimeout(d time.Duration) DialOption
 		func WithTransportCredentials(creds credentials.TransportCredentials) DialOption
 			* 配置连接层安全凭据（例如 TLS/SSL）。
@@ -404,7 +410,11 @@ type
 		* 服务器配置
 
 		func ChainStreamInterceptor(interceptors ...StreamServerInterceptor) ServerOption
+			* 设置多个链式流式拦截器
+
 		func ChainUnaryInterceptor(interceptors ...UnaryServerInterceptor) ServerOption
+			* 设置多个链式一元调用拦截器
+
 		func ConnectionTimeout(d time.Duration) ServerOption
 		func Creds(c credentials.TransportCredentials) ServerOption
 			* 服务器证书配置
@@ -438,7 +448,10 @@ type
 		func SharedWriteBuffer(val bool) ServerOption
 		func StatsHandler(h stats.Handler) ServerOption
 		func StreamInterceptor(i StreamServerInterceptor) ServerOption
+			* 设置流式拦截器
 		func UnaryInterceptor(i UnaryServerInterceptor) ServerOption
+			* 设置一元调用拦截器
+
 		func UnknownServiceHandler(streamHandler StreamHandler) ServerOption
 		func WaitForHandlers(w bool) ServerOption
 		func WriteBufferSize(s int) ServerOption

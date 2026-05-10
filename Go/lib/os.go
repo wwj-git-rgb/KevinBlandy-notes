@@ -257,6 +257,8 @@ type
 			* 如果进程已经结束，返回 ErrProcessDone 
 
 		func (p *Process) Wait() (*ProcessState, error)
+		func (p *Process) WithHandle(f func(handle uintptr)) error
+			* 在受支持的平台上访问内部进程句柄（Linux 5.4 或更高版本上的 pidfd，Windows 上的 Handle）。
 	
 	# type ProcessState struct
 		func (p *ProcessState) ExitCode() int

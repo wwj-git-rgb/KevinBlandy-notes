@@ -206,6 +206,18 @@ type
 		func (c *Client) Post(url, contentType string, body io.Reader) (resp *Response, err error)
 		func (c *Client) PostForm(url string, data url.Values) (resp *Response, err error)
 	
+	# type ClientConn struct {
+		}
+		
+		func (cc *ClientConn) Available() int
+		func (cc *ClientConn) Close() error
+		func (cc *ClientConn) Err() error
+		func (cc *ClientConn) InFlight() int
+		func (cc *ClientConn) Release()
+		func (cc *ClientConn) Reserve() error
+		func (cc *ClientConn) RoundTrip(req *Request) (*Response, error)
+		func (cc *ClientConn) SetStateHook(f func(*ClientConn))
+	
 	# type CloseNotifier interface {
 			CloseNotify() <-chan bool
 		}
@@ -304,6 +316,8 @@ type
 
 	# type HTTP2Config struct {
 			MaxConcurrentStreams int
+			StrictMaxConcurrentRequests bool
+				* 当现有 HTTP/2 连接超过其流限制时是否应打开新连接。
 			MaxDecoderHeaderTableSize int
 			MaxEncoderHeaderTableSize int
 			MaxReadFrameSize int
@@ -648,6 +662,7 @@ type
 				* 服务器接受的协议集，如果 Protocols 包括 UnencryptedHTTP2，服务器将接受，未加密的 HTTP/2 连接。服务器可以同时提供，HTTP/1 和未加密 HTTP/2。
 				* 如果协议为零，默认值通常是 HTTP/1 和 HTTP/2。如果 TLSNextProto 为非零，且不包含 “h2 ”条目、 默认情况下仅为 HTTP/1。
 		}
+		
 		func (srv *Server) Close() error
 		func (srv *Server) ListenAndServe() error
 		func (srv *Server) ListenAndServeTLS(certFile, keyFile string) error
@@ -706,6 +721,7 @@ type
 		func (t *Transport) CancelRequest(req *Request)
 		func (t *Transport) Clone() *Transport
 		func (t *Transport) CloseIdleConnections()
+		func (t *Transport) NewClientConn(ctx context.Context, scheme, address string) (*ClientConn, error)
 		func (t *Transport) RegisterProtocol(scheme string, rt RoundTripper)
 		func (t *Transport) RoundTrip(req *Request) (*Response, error)
 			* 执行HTTP请求，返回Response

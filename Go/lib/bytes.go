@@ -44,7 +44,10 @@
 		func (b *Buffer) WriteByte(c byte) error 
 		func (b *Buffer) WriteRune(r rune) (n int, err error)
 		func (b *Buffer) Read(p []byte) (n int, err error)
-		func (b *Buffer) Next(n int) []byte 
+		func (b *Buffer) Next(n int) []byte
+		func (b *Buffer) Peek(n int) ([]byte, error)
+			* 返回缓冲区中的下一个 n 个字节，指针不动
+
 		func (b *Buffer) ReadByte() (byte, error) 
 		func (b *Buffer) ReadRune() (r rune, size int, err error) 
 		func (b *Buffer) UnreadRune() error 

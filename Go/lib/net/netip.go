@@ -86,6 +86,7 @@ type
 		func (p Prefix) Addr() Addr
 		func (p Prefix) AppendTo(b []byte) []byte
 		func (p Prefix) Bits() int
+		func (p Prefix) Compare(p2 Prefix) int
 		func (p Prefix) Contains(ip Addr) bool
 		func (p Prefix) IsSingleIP() bool
 		func (p Prefix) IsValid() bool

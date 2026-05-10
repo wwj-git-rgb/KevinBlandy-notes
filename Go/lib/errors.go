@@ -26,6 +26,9 @@ func
 			var errType *http.MaxBytesError
 			// 结果
 			fmt.Println(errors.As(err, &errType))
+	
+	func AsType[E error](err error) (E, bool)
+		* 是 As 的泛型版本，性能更好
 
     func Is(err, target error) bool
 		* 返回 targer 的异常链中，是否有err错误
@@ -44,7 +47,7 @@ func
 	
 	func Join(errs ...error) error
 		* 一次性把多个 error 封装为 error
-		
+		* 如果列表为空，则返回 nil
 
 ------------------------
 demo

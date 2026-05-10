@@ -222,7 +222,17 @@ type
 				// time="2024-09-24 18:05:23" level=DEBUG source=D:/golang-app/app/main.go:25 msg=hi key1=val1 key2=255 key3="[1 2]" !BADKEY=bad
 
 		func (l *Logger) WithGroup(name string) *Logger
-
+	
+	# type MultiHandler struct {
+		}
+		
+		* 多 Handler 抽象
+		
+		func NewMultiHandler(handlers ...Handler) *MultiHandler
+		func (h *MultiHandler) Enabled(ctx context.Context, l Level) bool
+		func (h *MultiHandler) Handle(ctx context.Context, r Record) error
+		func (h *MultiHandler) WithAttrs(attrs []Attr) Handler
+		func (h *MultiHandler) WithGroup(name string) Handler
 	
 	# type Record struct {
 			Time time.Time

@@ -369,3 +369,18 @@ demo
 
 			return truncated
 		}
+	
+	# 解析补码负数形式的字节数字为有符号类型
+		// BytesToSignedInt 解析任意长度的字节切片为 big.Int，支持补码负数
+		func BytesToSignedInt(b []byte) *big.Int {
+			if len(b) == 0 {
+				return big.NewInt(0)
+			}
+			n := new(big.Int).SetBytes(b) // 先当作无符号数解析
+			// 检查最高位符号位（10000000）
+			if b[0]&0x80 != 0 {
+				two := new(big.Int).Lsh(big.NewInt(1), uint(len(b)*8)) // 2^(len*8)
+				n.Sub(n, two)                                          // 补码转换为负数
+			}
+			return n
+		}

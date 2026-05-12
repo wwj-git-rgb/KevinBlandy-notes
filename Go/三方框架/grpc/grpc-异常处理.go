@@ -110,6 +110,9 @@
 				}
 				// 返回异常信息
 				return nil, ds.Err()
+		
+		func Code(err error) codes.Code
+			* 从 err 中解析出状态码，如果为空则返回 codes.OK，反之则调用 Convert(err).Code() 进行返回
 
 		func Error(c codes.Code, msg string) error
 		func ErrorProto(s *spb.Status) error

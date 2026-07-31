@@ -331,5 +331,8 @@ Demo
 		// 3.141592653589793115997963468544185161590576171875
 		fmt.Println(decimal.RequireFromString(f.Text('f', 100)))
 
+		// 直接用科学计数法即可
+		decimal.RequireFromString(f.Text('e', -1)
+
 		// decimal 无损转换为 BigFloat
 		fmt.Println(decimal.RequireFromString(f.Text('f', 100)).BigFloat().Text('f', 100))

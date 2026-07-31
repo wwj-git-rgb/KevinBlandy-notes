@@ -29,7 +29,8 @@ func
 	
 	func AsType[E error](err error) (E, bool)
 		* 是 As 的泛型版本，性能更好
-
+			if apiError, ok := errors.AsType[*api.Error](err); ok {}
+	
     func Is(err, target error) bool
 		* 返回 targer 的异常链中，是否有err错误
 		* 如果target实现了 Is 方法，会通过这个接口判断，如果target实现了Unwrap方法，会不断剥离出包装的异常进行比较

@@ -89,6 +89,25 @@ go 泛型
 			~int
 			String() string
 		}
+	
+	
+	# 范型方法
+		* 结构体也可以用范型方法了
+			type Foo[T any] struct{}
+
+			func (f Foo[T]) Foo[G any](g G) {
+				fmt.Println(g)
+			}
+
+			func main() {
+				f := Foo[string]{}
+				f.Foo("hi")                 // hi
+				f.Foo(1)                    // 1
+				f.Foo[Foo[any]](Foo[any]{}) // {}
+			}
+		
+		* 接口方法不能声明类型参数。
+		* 泛型方法不能实现接口方法。
 
 ----------------
 go 泛型Map

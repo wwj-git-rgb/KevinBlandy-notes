@@ -86,10 +86,22 @@ struct
 		func (n Number) Int64() (int64, error)
 		func (n Number) String() string
 	
-	# type RawMessage []byte
-		func (m RawMessage) MarshalJSON() ([]byte, error)
-		func (m *RawMessage) UnmarshalJSON(data []byte) error
-
+	# type Options = jsonopts.Options
+		func CallMethodsWithLegacySemantics(v bool) Options
+		func DefaultOptionsV1() Options
+		func FormatByteArrayAsArray(v bool) Options
+		func FormatBytesWithLegacySemantics(v bool) Options
+		func FormatDurationAsNano(v bool) Options
+		func MatchCaseSensitiveDelimiter(v bool) Options
+		func MergeWithLegacySemantics(v bool) Options
+		func OmitEmptyWithLegacySemantics(v bool) Options
+		func ParseBytesWithLooseRFC4648(v bool) Options
+		func ParseTimeWithLooseRFC3339(v bool) Options
+		func ReportErrorsWithLegacySemantics(v bool) Options
+		func StringifyWithLegacySemantics(v bool) Options
+		func UnmarshalArrayFromAnyLength(v bool) Options
+	
+	# type RawMessage = jsontext.Value
 		* json原始字节，它作为结构体的一个字段，序列化的时候，会把它展开为独立的json字段
 			h := json.RawMessage(`{"precomputed": true}`)
 			c := struct {
@@ -132,6 +144,7 @@ struct
 			Field  string       // the full path from root node to the field, include embedded struct
 		}
 		func (e *UnmarshalTypeError) Error() string
+		func (e *UnmarshalTypeError) Unwrap() error
 
 	# type Unmarshaler interface {
 			UnmarshalJSON([]byte) error

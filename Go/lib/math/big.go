@@ -207,6 +207,9 @@ type
 		func (x *Int) CmpAbs(y *Int) int
 		func (z *Int) Div(x, y *Int) *Int
 		func (z *Int) DivMod(x, y, m *Int) (*Int, *Int)
+		func (z *Int) Divide(x, y, r *Int, mode RoundingMode) (*Int, *Int)
+			* 带有显式舍入模式的除法，取代了 “我想要的是 Quo 还是 Div？” 的抛硬币决策：	
+
 		func (z *Int) Exp(x, y, m *Int) *Int
 			* 指数计算，计算 x 的 y 次方是多少
 			* Exp 函数计算 z = x**y mod |m|（忽略 m 的符号）并返回 z。其具体行为如下：

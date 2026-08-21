@@ -75,6 +75,7 @@
 	func ContainsRune(s string, r rune) bool
 	func Count(s, substr string) int
 	func Cut(s, sep string) (before, after string, found bool)
+	func CutLast(s, sep string) (before, after string, found bool)
 	func CutPrefix(s, prefix string) (after string, found bool)
 	func CutSuffix(s, suffix string) (before string, found bool)
 	func EqualFold(s, t string) bool

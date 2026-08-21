@@ -1,35 +1,35 @@
 -----------------
-Ä£¿é³£Á¿
+æ¨¡å—å¸¸é‡
 -----------------
 	const MinRead = 512
 
 -----------------
-½á¹¹Ìå
+ç»“æ„ä½“
 -----------------
-	# Buffer ½á¹¹Ìå
+	# Buffer ç»“æ„ä½“
 		type Buffer struct {
 			buf      []byte // contents are the bytes buf[off : len(buf)]
 			off      int    // read at &buf[off], write at &buf[len(buf)]
 			lastRead readOp // last read operation, so that Unread* can work correctly.
 		}
 
-		* ÓÃÓÚÔÚÄÚ´æÖĞ´´½¨Ò»¸ö×Ö½ÚµÄ»º³åÇø£¬ÓÃÓÚIO£¬ËüÊµÏÖÁË³£¹æµÄ Writer/Reader ½Ó¿Ú
-		* ×îÖÕ¿ÉÒÔ°Ñ½á¹ûĞ´Èë/¶ÁÈ¡µ½±ğµÄµØ¶ù£¬ÀàËÆÓÚJavaÖĞµÄ ByteBuffer
+		* ç”¨äºåœ¨å†…å­˜ä¸­åˆ›å»ºä¸€ä¸ªå­—èŠ‚çš„ç¼“å†²åŒºï¼Œç”¨äºIOï¼Œå®ƒå®ç°äº†å¸¸è§„çš„ Writer/Reader æ¥å£
+		* æœ€ç»ˆå¯ä»¥æŠŠç»“æœå†™å…¥/è¯»å–åˆ°åˆ«çš„åœ°å„¿ï¼Œç±»ä¼¼äºJavaä¸­çš„ ByteBuffer
 
 		func NewBuffer(buf []byte) *Buffer { return &Buffer{buf: buf} 
 		func NewBufferString(s string) *Buffer 
 
 		func (b *Buffer) Available() int
-			* ·µ»Ø»º³åÇøÖĞÎ´Ê¹ÓÃµÄ×Ö½ÚÊı¡£
+			* è¿”å›ç¼“å†²åŒºä¸­æœªä½¿ç”¨çš„å­—èŠ‚æ•°ã€‚
 				 return cap(b.buf) - len(b.buf)
 		
 		func (b *Buffer) AvailableBuffer() []byte
-			* AvailableBuffer ·µ»ØÒ»¸öÈİÁ¿Îª b.Available() µÄ¿Õ»º³åÇø¡£¸Ã»º³åÇø½«±»×·¼Ó²¢´«µİ¸ø½ôËæÆäºóµÄ "Write" µ÷ÓÃ¡£
-			* ¸Ã»º³åÇøÖ»ÔÚÏÂ´Î¶Ô b ½øĞĞĞ´²Ù×÷Ö®Ç°ÓĞĞ§¡£
+			* AvailableBuffer è¿”å›ä¸€ä¸ªå®¹é‡ä¸º b.Available() çš„ç©ºç¼“å†²åŒºã€‚è¯¥ç¼“å†²åŒºå°†è¢«è¿½åŠ å¹¶ä¼ é€’ç»™ç´§éšå…¶åçš„ "Write" è°ƒç”¨ã€‚
+			* è¯¥ç¼“å†²åŒºåªåœ¨ä¸‹æ¬¡å¯¹ b è¿›è¡Œå†™æ“ä½œä¹‹å‰æœ‰æ•ˆã€‚
 				 return b.buf[len(b.buf):]
 
 		func (b *Buffer) Bytes() []byte	
-			* ·µ»ØÆäÖĞµÄ×Ö½ÚÇĞÆ¬
+			* è¿”å›å…¶ä¸­çš„å­—èŠ‚åˆ‡ç‰‡
 
 		func (b *Buffer) String() string
 		func (b *Buffer) Len() int
@@ -46,7 +46,7 @@
 		func (b *Buffer) Read(p []byte) (n int, err error)
 		func (b *Buffer) Next(n int) []byte
 		func (b *Buffer) Peek(n int) ([]byte, error)
-			* ·µ»Ø»º³åÇøÖĞµÄÏÂÒ»¸ö n ¸ö×Ö½Ú£¬Ö¸Õë²»¶¯
+			* è¿”å›ç¼“å†²åŒºä¸­çš„ä¸‹ä¸€ä¸ª n ä¸ªå­—èŠ‚ï¼ŒæŒ‡é’ˆä¸åŠ¨
 
 		func (b *Buffer) ReadByte() (byte, error) 
 		func (b *Buffer) ReadRune() (r rune, size int, err error) 
@@ -56,15 +56,15 @@
 		func (b *Buffer) ReadString(delim byte) (line string, err error) 
 
 
-	# Reader½á¹¹Ìå
+	# Readerç»“æ„ä½“
 		type Reader struct {
 			s        []byte
 			i        int64 // current reading index
 			prevRune int   // index of previous rune; or < 0
 		}
 
-		* ÓÃÓÚ°Ñ×Ö½Ú·â×°µ½Ò»¸ö»º³åÇø£¬Ö»¶Á
-		* ¿ÉÒÔÓÃ¸÷ÖÖ·½·¨´ÓÕâ¸ö»º³åÇøÖĞ¶ÁÈ¡Êı¾İ
+		* ç”¨äºæŠŠå­—èŠ‚å°è£…åˆ°ä¸€ä¸ªç¼“å†²åŒºï¼Œåªè¯»
+		* å¯ä»¥ç”¨å„ç§æ–¹æ³•ä»è¿™ä¸ªç¼“å†²åŒºä¸­è¯»å–æ•°æ®
 
 		func NewReader(b []byte) *Reader { return &Reader{b, 0, -1}
 		
@@ -82,7 +82,7 @@
 
 
 -----------------
-Ä£¿é·½·¨
+æ¨¡å—æ–¹æ³•
 -----------------
 	func Clone(b []byte) []byte
 	func Compare(a, b []byte) int
@@ -92,6 +92,7 @@
 	func ContainsRune(b []byte, r rune) bool
 	func Count(s, sep []byte) int
 	func Cut(s, sep []byte) (before, after []byte, found bool)
+	func CutLast(s, sep []byte) (before, after []byte, found bool)
 	func CutPrefix(s, prefix []byte) (after []byte, found bool)
 	func CutSuffix(s, suffix []byte) (before []byte, found bool)
 	func Equal(a, b []byte) bool

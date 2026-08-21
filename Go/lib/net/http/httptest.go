@@ -37,6 +37,7 @@ type
 
 		func NewServer(handler http.Handler) *Server
 		func NewTLSServer(handler http.Handler) *Server
+		func NewTestServer(t testing.TB, handler http.Handler) *Server
 		func NewUnstartedServer(handler http.Handler) *Server
 		func (s *Server) Certificate() *x509.Certificate
 		func (s *Server) Client() *http.Client

@@ -3,7 +3,7 @@ url
 --------------------
 
 --------------------
-±äÁ¿
+å˜é‡
 --------------------
 
 --------------------
@@ -28,15 +28,15 @@ type
 	
 	# type URL struct {
 			Scheme      string
-				* Ğ­Òé
+				* åè®®
 
 			Opaque      string    // encoded opaque data
 			User        *Userinfo // username and password information
-				* ÓÃ»§ĞÅÏ¢£¬ÓÃ»§ÃûÃÜÂë
+				* ç”¨æˆ·ä¿¡æ¯ï¼Œç”¨æˆ·åå¯†ç 
 
 			Host        string    // host or host:port
-			Path        string    // Ïà¶ÔÂ·¾¶£¬£¨Ïà¶ÔÂ·¾¶¿ÉÒÔÊ¡ÂÔÇ°ÃæµÄĞ±Ïß£©
-			RawPath     string    // ±àÂëµÄÂ·¾¶ÌáÊ¾£¨¼û EscapedPath ·½·¨£©¡£
+			Path        string    // ç›¸å¯¹è·¯å¾„ï¼Œï¼ˆç›¸å¯¹è·¯å¾„å¯ä»¥çœç•¥å‰é¢çš„æ–œçº¿ï¼‰
+			RawPath     string    // ç¼–ç çš„è·¯å¾„æç¤ºï¼ˆè§ EscapedPath æ–¹æ³•ï¼‰ã€‚
 			OmitHost	bool	  // do not emit empty host (authority)
 			ForceQuery  bool      // append a query ('?') even if RawQuery is empty
 			RawQuery    string    // encoded query values, without '?'
@@ -44,16 +44,20 @@ type
 			RawFragment string    // encoded fragment hint (see EscapedFragment method)
 		}
 		
-		* URL¶ÔÏó
+		* URLå¯¹è±¡
 
 		func Parse(rawurl string) (*URL, error)
-			* °ÑÔ­Ê¼ URL ½âÎöÎª URL ½á¹¹¡£
-			* URL ¿ÉÒÔÊÇÏà¶ÔµÄ£¨²»º¬Ö÷»úµÄÂ·¾¶£©£¬Ò²¿ÉÒÔÊÇ¾ø¶ÔµÄ£¨ÒÔ scheme ¿ªÍ·£©¡£
-			* ³¢ÊÔ½âÎö²»º¬ scheme µÄÖ÷»úÃûºÍÂ·¾¶ÊÇÎŞĞ§µÄ£¬µ«ÓÉÓÚ½âÎöÆçÒå£¬²»Ò»¶¨»á·µ»Ø´íÎó¡£
+			* æŠŠåŸå§‹ URL è§£æä¸º URL ç»“æ„ã€‚
+			* URL å¯ä»¥æ˜¯ç›¸å¯¹çš„ï¼ˆä¸å«ä¸»æœºçš„è·¯å¾„ï¼‰ï¼Œä¹Ÿå¯ä»¥æ˜¯ç»å¯¹çš„ï¼ˆä»¥ scheme å¼€å¤´ï¼‰ã€‚
+			* å°è¯•è§£æä¸å« scheme çš„ä¸»æœºåå’Œè·¯å¾„æ˜¯æ— æ•ˆçš„ï¼Œä½†ç”±äºè§£ææ­§ä¹‰ï¼Œä¸ä¸€å®šä¼šè¿”å›é”™è¯¯ã€‚
 
 		func ParseRequestURI(rawurl string) (*URL, error)
-			* ½«Ô­Ê¼ url ½âÎöÎª URL ½á¹¹¡£Ëü¼Ù¶¨ url ÊÇÔÚ HTTP ÇëÇóÖĞÊÕµ½µÄ£¬Òò´Ë url Ö»±»½âÊÍÎª¾ø¶Ô URI »ò¾ø¶ÔÂ·¾¶¡£
-			* ¼Ù¶¨ url ×Ö·û´®Ã»ÓĞ #fragment ºó×º¡££¨ä¯ÀÀÆ÷ÔÚÏòÍøÂç·şÎñÆ÷·¢ËÍ URL Ç°»áÈ¥µô #fragment£©¡£
+			* å°†åŸå§‹ url è§£æä¸º URL ç»“æ„ã€‚å®ƒå‡å®š url æ˜¯åœ¨ HTTP è¯·æ±‚ä¸­æ”¶åˆ°çš„ï¼Œå› æ­¤ url åªè¢«è§£é‡Šä¸ºç»å¯¹ URI æˆ–ç»å¯¹è·¯å¾„ã€‚
+			* å‡å®š url å­—ç¬¦ä¸²æ²¡æœ‰ #fragment åç¼€ã€‚ï¼ˆæµè§ˆå™¨åœ¨å‘ç½‘ç»œæœåŠ¡å™¨å‘é€ URL å‰ä¼šå»æ‰ #fragmentï¼‰ã€‚
+
+		func (u *URL) AppendBinary(b []byte) ([]byte, error)
+		func (u *URL) Clone() *URL
+			* æ·±æ‹·è´
 
 		func (u *URL) EscapedFragment() string
 		func (u *URL) EscapedPath() string
@@ -63,24 +67,24 @@ type
 		func (u *URL) Parse(ref string) (*URL, error)
 		func (u *URL) Port() string
 		func (u *URL) Query() Values
-			* ·µ»Ø¼ìË÷²ÎÊı
+			* è¿”å›æ£€ç´¢å‚æ•°
 
 		func (u *URL) Redacted() string
-			* °ÑURLÖĞµÄÃÜÂëĞÅÏ¢Ìæ»»Îª: XXXX 
+			* æŠŠURLä¸­çš„å¯†ç ä¿¡æ¯æ›¿æ¢ä¸º: XXXX 
 
 		func (u *URL) RequestURI() string
 		func (u *URL) ResolveReference(ref *URL) *URL
 		func (u *URL) String() string
 		func (u *URL) UnmarshalBinary(text []byte) error
 		func (u *URL) JoinPath(elem ...string) *URL 
-			* Ìí¼ÓÂ·¾¶
+			* æ·»åŠ è·¯å¾„
 
 	# type Userinfo struct {
 		}
 		
 		func User(username string) *Userinfo
 		func UserPassword(username, password string) *Userinfo
-			* Í¨¹ıÓÃ»§ÃûºÍÃÜÂë¹¹½¨ÓÃ»§ĞÅÏ¢
+			* é€šè¿‡ç”¨æˆ·åå’Œå¯†ç æ„å»ºç”¨æˆ·ä¿¡æ¯
 				u, err := url.Parse("https://gitee.com/kevinblandy/demo.git")
 				if err != nil {
 					panic(err)
@@ -96,14 +100,17 @@ type
 	# type Values map[string][]string
 
 		func ParseQuery(query string) (Values, error)
-			* ½âÎöÇëÇó×Ö·û´®£¬ÎªValues
+			* è§£æè¯·æ±‚å­—ç¬¦ä¸²ï¼Œä¸ºValues
 
 		func (v Values) Add(key, value string)
+		func (v Values) Clone() Values
+				* æ·±Clone
+
 		func (v Values) Del(key string)
 		func (v Values) Encode() string
 		func (v Values) Get(key string) string
-			* »ñÈ¡Óë¸ø¶¨ KEY Ïà¹ØµÄµÚÒ»¸öÖµ¡£Èç¹ûÃ»ÓĞÓë KEY Ïà¹ØµÄÖµ£¬Get ·µ»Ø¿Õ×Ö·û´®¡£
-			* Òª·ÃÎÊ¶à¸öÖµ£¬¿ÉÖ±½ÓÊ¹ÓÃ map¡£
+			* è·å–ä¸ç»™å®š KEY ç›¸å…³çš„ç¬¬ä¸€ä¸ªå€¼ã€‚å¦‚æœæ²¡æœ‰ä¸ KEY ç›¸å…³çš„å€¼ï¼ŒGet è¿”å›ç©ºå­—ç¬¦ä¸²ã€‚
+			* è¦è®¿é—®å¤šä¸ªå€¼ï¼Œå¯ç›´æ¥ä½¿ç”¨ mapã€‚
 				var column []string = query["column"]
 			
 		func (v Values) Set(key, value string)
@@ -115,19 +122,19 @@ fanc
 	func PathEscape(s string) string
 	func PathUnescape(s string) (string, error)
 	func QueryEscape(s string) string
-		* URL±àÂë
+		* URLç¼–ç 
 			c.Writer.Header().Set("Content-Disposition", `attachment; filename*=UTF-8''`+url.QueryEscape(filename))
 		
 	func QueryUnescape(s string) (string, error) 
-		* ¼ìË÷²ÎÊıURI½âÂë
+		* æ£€ç´¢å‚æ•°URIè§£ç 
 
 	func JoinPath(base string, elem ...string) (result string, err error)
-		* Â·¾¶join
+		* è·¯å¾„join
 
 --------------------
 Demo
 --------------------
-	# ¹¹½¨±íµ¥
+	# æ„å»ºè¡¨å•
 		import (
 			"fmt"
 			"net/url"
@@ -135,30 +142,30 @@ Demo
 
 		func main(){
 			var form url.Values = make(map[string] []string)
-			form.Add("name", "GoÓïÑÔ")
-			form.Add("name", "JavaÓïÑÔ")
+			form.Add("name", "Goè¯­è¨€")
+			form.Add("name", "Javaè¯­è¨€")
 			fmt.Print(form.Encode())  // name=Go%E8%AF%AD%E8%A8%80&name=Java%E8%AF%AD%E8%A8%80
 		}
 	
-	# ¹¹½¨ÍêÕûµÄÇëÇó
+	# æ„å»ºå®Œæ•´çš„è¯·æ±‚
 		import (
 			"fmt"
 			"net/url"
 		)
 
 		func main(){
-			// ¹¹½¨ÇëÇóµØÖ·
+			// æ„å»ºè¯·æ±‚åœ°å€
 			target, err := url.Parse("https://springboot.io")
 			if err != nil {
 				println(err)
 			}
 
-			// »ñÈ¡µØÖ·ÖĞµÄÇëÇó²ÎÊı£¬½øĞĞÔöÉ¾
+			// è·å–åœ°å€ä¸­çš„è¯·æ±‚å‚æ•°ï¼Œè¿›è¡Œå¢åˆ 
 			query := target.Query()
-			query.Add("name", "SpringBootÖĞÎÄÉçÇø")
+			query.Add("name", "SpringBootä¸­æ–‡ç¤¾åŒº")
 			query.Add("address", "https://springboot.io")
 
-			// °ÑÇëÇó²ÎÊı±àÂëºó£¬ÖØĞÂÉèÖÃ¸øÄ¿±êµØÖ·
+			// æŠŠè¯·æ±‚å‚æ•°ç¼–ç åï¼Œé‡æ–°è®¾ç½®ç»™ç›®æ ‡åœ°å€
 			target.RawQuery = query.Encode()
 
 			fmt.Println(target)

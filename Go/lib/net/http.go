@@ -92,15 +92,20 @@ http
 	# 默认的Header大小
 		const DefaultMaxHeaderBytes = 1 << 20 // 1 MB
 	
+	# 默认的最多允许的 Header 数量
+		const DefaultMaxHeaderValueCount = 500
+	
 	# Transport的MaxIdleConnsPerHost的默认值。
 		const DefaultMaxIdleConnsPerHost = 2
+	
+	# HTTP 中的时间格式化
+		const TimeFormat = "Mon, 02 Jan 2006 15:04:05 GMT"
 	
 	# 在HTTP头文件中生成时间时使用的时间格式
 		const TrailerPrefix = "Trailer:"
 
 		* 它类似于time.RFC1123，但硬编码为GMT作为时区。被格式化的时间必须是UTC，这样Format才能生成正确的格式。
 
-	
 	# 异常信息
 		var (
 			ErrNotSupported = &ProtocolError{"feature not supported"}	
@@ -461,8 +466,8 @@ type
 			Response *Response
 			Pattern string
 				* 对于入站请求Pattern 字段包含与请求匹配的 ServeMux 模式（如果有）。
-
 		}
+		
 		func NewRequest(method, url string, body io.Reader) (*Request, error)
 		func NewRequestWithContext(ctx context.Context, method, url string, body io.Reader) (*Request, error)
 		func ReadRequest(b *bufio.Reader) (*Request, error)
@@ -650,6 +655,9 @@ type
 				* 设置为复数表示不超时
 
 			MaxHeaderBytes int
+			MaxHeaderValueCount int
+				* 允许的最多 Header 数量
+
 			TLSNextProto map[string]func(*Server, *tls.Conn, Handler)
 			ConnState func(net.Conn, ConnState)
 			ErrorLog *log.Logger
@@ -661,6 +669,10 @@ type
 			Protocols *Protocols
 				* 服务器接受的协议集，如果 Protocols 包括 UnencryptedHTTP2，服务器将接受，未加密的 HTTP/2 连接。服务器可以同时提供，HTTP/1 和未加密 HTTP/2。
 				* 如果协议为零，默认值通常是 HTTP/1 和 HTTP/2。如果 TLSNextProto 为非零，且不包含 “h2 ”条目、 默认情况下仅为 HTTP/1。
+			
+			DisableClientPriority bool
+				* 指定是否应遵循 RFC 9218 中规定的客户端指定优先级。
+				* 当使用 HTTP/2 且未为 HTTP/2 服务器定义自定义写入调度器时，此字段才生效。否则，此字段无任何作用。
 		}
 		
 		func (srv *Server) Close() error

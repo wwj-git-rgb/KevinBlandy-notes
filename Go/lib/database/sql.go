@@ -402,9 +402,9 @@ type
 -----------------
 func
 -----------------
+	func ConvertAssign(scanCtx driver.ScanContext, dest any, src driver.Value) error
 	func Drivers() []string
 	func Register(name string, driver driver.Driver)
-
 
 -----------------
 demo

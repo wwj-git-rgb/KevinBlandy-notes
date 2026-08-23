@@ -44,6 +44,7 @@ type
 		func (r *Rand) Int64() int64
 		func (r *Rand) Int64N(n int64) int64
 		func (r *Rand) IntN(n int) int
+		func (r *Rand) N[Int intType](n Int) Int
 		func (r *Rand) NormFloat64() float64
 		func (r *Rand) Perm(n int) []int
 		func (r *Rand) Shuffle(n int, swap func(i, j int))

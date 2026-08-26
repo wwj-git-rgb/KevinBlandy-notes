@@ -67,9 +67,7 @@ struct
 		}
 		func (e *InvalidUnmarshalError) Error() string
 	
-	# type Marshaler interface {
-			MarshalJSON() ([]byte, error)
-		}
+	# type Marshaler = jsonv2.Marshaler
 	
 	# type MarshalerError struct {
 			Type reflect.Type
@@ -84,7 +82,9 @@ struct
 			
 		func (n Number) Float64() (float64, error)
 		func (n Number) Int64() (int64, error)
+		func (n Number) MarshalJSONTo(enc *jsontext.Encoder) error
 		func (n Number) String() string
+		func (n *Number) UnmarshalJSONFrom(dec *jsontext.Decoder) error
 	
 	# type Options = jsonopts.Options
 		func CallMethodsWithLegacySemantics(v bool) Options
@@ -146,9 +146,7 @@ struct
 		func (e *UnmarshalTypeError) Error() string
 		func (e *UnmarshalTypeError) Unwrap() error
 
-	# type Unmarshaler interface {
-			UnmarshalJSON([]byte) error
-		}
+	# type Unmarshaler = jsonv2.Unmarshaler
 	
 	# type UnsupportedTypeError struct {
 			Type reflect.Type
